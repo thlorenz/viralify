@@ -19,10 +19,10 @@ function addTransform(front, transform, packfile) {
     // other option would be to only add it if it's not there already, but then front/back switching wouldn' work
     var idx = pack.browserify.transform.indexOf(tx);
     if (~idx) pack.browserify.transform.splice(idx, 1);
-
-    if (front) pack.browserify.transform = [tx].concat(pack.browserify.transform);
-    else       pack.browserify.transform = pack.browserify.transform.concat(tx);
   });
+
+  if (front) pack.browserify.transform = transform.concat(pack.browserify.transform);
+  else       pack.browserify.transform = pack.browserify.transform.concat(transform);
 
   return { file: packfile, pack: pack };
 }
@@ -40,6 +40,9 @@ function (root, transform, front, cb) {
   glob('**/package.json', { cwd: root }, function (err, res) {
     if (err) return cb(err);
 
+    // nothing to do
+    if (!res.length) return cb();
+
     var packs = res
       .map(function (x) { return path.resolve(root, x) })
       .map(addTransform.bind(null, front, transform));
@@ -55,23 +58,3 @@ function (root, transform, front, cb) {
     runnel(tasks);
   });
 };
-
-// Test
-if (!module.parent && typeof window === 'undefined') {
-  var root= __dirname + '/test/copy';
-
-  go(root, 'browserify-swap', function (err) {
-    if (err) return console.error(err);
-    // package.json's found in root and below now have 'browserify-swap' added to their 'browserify.transform' field
-
-    glob('**/package.json', { cwd: root }, function (err, res) {
-      if (err) return console.error(err);
-
-      var packs = res
-        .map(function (x) { return path.resolve(root, x) })
-        .map(require);
-
-      inspect(packs);
-    })
-  })
-}
