@@ -1,13 +1,9 @@
 'use strict';
 
-var glob = require('glob')
-  , path = require('path')
-  , fs   = require('fs')
-  , runnel = require('runnel')
-
-function inspect(obj, depth) {
-  console.error(require('util').inspect(obj, false, depth || 5, true));
-}
+var glob   =  require('glob')
+  , path   =  require('path')
+  , fs     =  require('fs')
+  , runnel =  require('runnel')
 
 function addTransform(front, transform, packfile) {
   var pack = require(packfile);
@@ -29,7 +25,18 @@ function addTransform(front, transform, packfile) {
 
 var go = module.exports = 
 
-function (root, transform, front, cb) {
+/**
+ * Injects the given transform(s) into the `browserify.transform` field of all `package.json`s
+ * at and below the given `root`.
+ * 
+ * @name viralify
+ * @function
+ * @param {String} root of the package
+ * @param {Array.<String>} transform one or more transforms to be added to the transform field
+ * @param {Boolean=} front if set transforms are added to the front of the transform field so they run first
+ * @param {Function(Error)} cb called when the transform injection is complete
+ */
+function viralify(root, transform, front, cb) {
   if (!Array.isArray(transform)) transform = [ transform ];
 
   if (typeof front === 'function') {

@@ -1,7 +1,7 @@
 {
   "name": "viralify",
   "version": "0.0.0",
-  "description": "Injects a browserify transform into all dependencies of a package recursively.",
+  "description": "Injects one or more browserify transforms into all dependencies of a package recursively.",
   "main": "index.js",
   "scripts": {
     "test-main": "tap test/*.js",
@@ -25,7 +25,7 @@
     "rimraf": "~2.2.5",
     "cpr": "~0.1.1"
   },
-  "keywords": [],
+  "keywords": [ "browserify", "recursive", "global", "transform", "viral", "inject" ],
   "author": {
     "name": "Thorsten Lorenz",
     "email": "thlorenz@gmx.de",
