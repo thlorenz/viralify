@@ -1,10 +1,14 @@
-# viralify
-[![build status](https://secure.travis-ci.org/thlorenz/viralify.png)](http://travis-ci.org/thlorenz/viralify)
+# viralify [![build status](https://secure.travis-ci.org/thlorenz/viralify.png)](http://travis-ci.org/thlorenz/viralify)
 
-Inject a browserify transform into all dependencies of a package recursively.
+Injects a browserify transform into all dependencies of a package recursively.
 
 ```js
-// TODO
+var viralify = require('viralify');
+
+viralify(root, 'browserify-swap', function (err) {
+  if (err) return console.error(err);
+  // package.json's found in root and below now have 'browserify-swap' added to their 'browserify.transform' field
+})
 ```
 
 ## Status
