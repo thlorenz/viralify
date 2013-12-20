@@ -16,7 +16,8 @@
   },
   "homepage": "https://github.com/thlorenz/viralify",
   "dependencies": {
-    "glob": "~3.2.7"
+    "glob": "~3.2.7",
+    "runnel": "~0.5.1"
   },
   "devDependencies": {
     "nave": "~0.4.3",
