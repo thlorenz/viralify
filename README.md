@@ -2,6 +2,10 @@
 
 Injects one or more browserify transforms into all dependencies of a package recursively.
 
+```sh
+viralify . -t browserify-swap
+```
+
 ```js
 var viralify = require('viralify');
 
@@ -16,6 +20,28 @@ viralify(root, 'browserify-swap', function (err) {
 
     npm install viralify
 
+## Usage
+
+```
+viralify <path> <options>
+
+  Inject browserify transform(s) into the package.json files of all packages at and below the given path.
+
+OPTIONS:
+
+  -t, --transform   transform(s) to inject
+  -f, --front       if set, the transform(s) are injected in the front of the transform field so they run first
+
+EXAMPLES:
+
+  Inject 'browserify-swap' transform for package in current directory and all its dependencies
+
+    viralify . -t browserify-swap
+
+  Inject 'envify' and 'es6ify' transforms in front for all dependencies found in ./node_modules
+
+    viralify ./node_modules --transform envify --transform es6ify --front
+```
 ## API
 
 <!-- START docme generated API please keep comment here to allow auto update -->

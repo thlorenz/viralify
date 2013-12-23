@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "Injects one or more browserify transforms into all dependencies of a package recursively.",
   "main": "index.js",
+  "bin": {
+    "viralify": "bin/viralify.js"
+  },
   "scripts": {
     "test-main": "tap test/*.js",
     "test-0.8": "nave use 0.8 npm run test-main",
@@ -17,7 +20,9 @@
   "homepage": "https://github.com/thlorenz/viralify",
   "dependencies": {
     "glob": "~3.2.7",
-    "runnel": "~0.5.1"
+    "runnel": "~0.5.1",
+    "minimist": "0.0.5",
+    "ansicolors": "~0.3.2"
   },
   "devDependencies": {
     "nave": "~0.4.3",
