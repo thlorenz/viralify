@@ -14,12 +14,20 @@ function arraysEqual(a, b) {
   }
   return true;
 }
-
 function addTransform(front, transform, packfile) {
+
   var pack = require(packfile);
   if (!pack.browserify) pack.browserify = {};
-  if (!pack.browserify.transform) pack.browserify.transform = [];
 
+  // "browserify": "index.js" => "browserify": { "index.js": "index.js" } so we can add our transforms
+  if (typeof pack.browserify === 'string') { 
+    var k = pack.browserify;
+    pack.browserify = {};
+    pack.browserify[k] = k; 
+  }
+
+  if (!pack.browserify.transform) pack.browserify.transform = [];
+  
   var before = [].concat(pack.browserify.transform);
 
   transform.forEach(function (tx) {
