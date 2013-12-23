@@ -1,6 +1,6 @@
 {
   "name": "viralify",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Injects one or more browserify transforms into all dependencies of a package recursively.",
   "main": "index.js",
   "bin": {
