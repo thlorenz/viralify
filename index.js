@@ -23,6 +23,13 @@ function addTransform(front, transform, packfile) {
   return { file: packfile, pack: pack };
 }
 
+function packsWithTransforms(root, transform, front, relPaths) {
+  return  relPaths
+    .map(function (x) { return path.resolve(root, x) })
+    .map(addTransform.bind(null, front, transform));
+}
+
+
 var go = module.exports = 
 
 /**
@@ -44,15 +51,13 @@ function viralify(root, transform, front, cb) {
     front = false;
   }
 
-  glob('**/package.json', { cwd: root }, function (err, res) {
+  glob('**/package.json', { cwd: root }, function (err, relPaths) {
     if (err) return cb(err);
 
     // nothing to do
-    if (!res.length) return cb();
+    if (!relPaths.length) return cb();
 
-    var packs = res
-      .map(function (x) { return path.resolve(root, x) })
-      .map(addTransform.bind(null, front, transform));
+    var packs = packsWithTransforms(root, transform, front, relPaths);
 
     var tasks = packs
       .map(function (p) {
@@ -65,3 +70,24 @@ function viralify(root, transform, front, cb) {
     runnel(tasks);
   });
 };
+
+module.exports.sync = 
+
+/**
+ * Same as `viralify` but performed synchronously.
+ * 
+ * @name viralivy.sync
+ * @function
+ * @param {String} root of the package
+ * @param {Array.<String>} transform one or more transforms to be added to the transform field
+ * @param {Boolean=} front if set transforms are added to the front of the transform field so they run first
+ */
+function sync(root, transform, front) {
+  if (!Array.isArray(transform)) transform = [ transform ];
+
+  var relPaths = glob.sync('**/package.json', { cwd: root })
+  var packs = packsWithTransforms(root, transform, front, relPaths);
+  packs.forEach(function (p) {
+    fs.writeFileSync(p.file, JSON.stringify(p.pack, null, 2), 'utf8');
+  })
+}

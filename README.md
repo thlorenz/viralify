@@ -120,7 +120,7 @@ at and below the given <code>root</code>.</p>
 <li>
 <a href="https://github.com/thlorenz/viralify/blob/master/index.js">index.js</a>
 <span>, </span>
-<a href="https://github.com/thlorenz/viralify/blob/master/index.js#L28">lineno 28</a>
+<a href="https://github.com/thlorenz/viralify/blob/master/index.js#L35">lineno 35</a>
 </li>
 </ul></dd>
 </dl>
@@ -133,6 +133,10 @@ at and below the given <code>root</code>.</p>
 *generated with [docme](https://github.com/thlorenz/docme)*
 </div>
 <!-- END docme generated API please keep comment here to allow auto update -->
+
+#### viralify.sync(root, transform, front)
+
+Same as `viralify` but performed synchronously.
 
 ## License
 
