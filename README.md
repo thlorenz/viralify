@@ -63,6 +63,8 @@ EXAMPLES:
 <div class="description">
 <p>Injects the given transform(s) into the <code>browserify.transform</code> field of all <code>package.json</code>s
 at and below the given <code>root</code>.</p>
+<p>If the transform(s) were contained in the <code>package.json</code> already, no changes are made and no writes performed.
+This means that all viralify runs succeeding the first one will be much faster than the first.</p>
 </div>
 <h5>Parameters:</h5>
 <table class="params">
@@ -120,7 +122,7 @@ at and below the given <code>root</code>.</p>
 <li>
 <a href="https://github.com/thlorenz/viralify/blob/master/index.js">index.js</a>
 <span>, </span>
-<a href="https://github.com/thlorenz/viralify/blob/master/index.js#L35">lineno 35</a>
+<a href="https://github.com/thlorenz/viralify/blob/master/index.js#L50">lineno 50</a>
 </li>
 </ul></dd>
 </dl>

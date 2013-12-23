@@ -5,10 +5,22 @@ var glob   =  require('glob')
   , fs     =  require('fs')
   , runnel =  require('runnel')
 
+function arraysEqual(a, b) {
+  if (!a && !b) return true;
+  if (!a || !b) return false;
+  if (a.length !== b.length) return false;
+  for (var i = 0; i < a.length; i++) {
+    if (a[i] !== b[i]) return false;
+  }
+  return true;
+}
+
 function addTransform(front, transform, packfile) {
   var pack = require(packfile);
   if (!pack.browserify) pack.browserify = {};
   if (!pack.browserify.transform) pack.browserify.transform = [];
+
+  var before = [].concat(pack.browserify.transform);
 
   transform.forEach(function (tx) {
     // remove previously injected transform (i.e. may have been added at the end, but now needs to be in front)
@@ -20,13 +32,16 @@ function addTransform(front, transform, packfile) {
   if (front) pack.browserify.transform = transform.concat(pack.browserify.transform);
   else       pack.browserify.transform = pack.browserify.transform.concat(transform);
 
-  return { file: packfile, pack: pack };
+  var changed = !arraysEqual(before, pack.browserify.transform);
+
+  return { file: packfile, pack: pack, changed: changed };
 }
 
 function packsWithTransforms(root, transform, front, relPaths) {
-  return  relPaths
+  return relPaths
     .map(function (x) { return path.resolve(root, x) })
-    .map(addTransform.bind(null, front, transform));
+    .map(addTransform.bind(null, front, transform))
+    .filter(function (p) { return p.changed });
 }
 
 
@@ -35,6 +50,9 @@ var go = module.exports =
 /**
  * Injects the given transform(s) into the `browserify.transform` field of all `package.json`s
  * at and below the given `root`.
+ *
+ * If the transform(s) were contained in the `package.json` already, no changes are made and no writes performed.
+ * This means that all viralify runs succeeding the first one will be much faster.
  * 
  * @name viralify
  * @function
@@ -58,6 +76,9 @@ function viralify(root, transform, front, cb) {
     if (!relPaths.length) return cb();
 
     var packs = packsWithTransforms(root, transform, front, relPaths);
+
+    // none of the packages changed due to adding the transform, which means they already contained it at the same position
+    if (!packs.length) return cb();
 
     var tasks = packs
       .map(function (p) {
