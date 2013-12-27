@@ -9,10 +9,10 @@ viralify . -t browserify-swap
 ```js
 var viralify = require('viralify');
 
-viralify(root, 'browserify-swap', function (err) {
+viralify(root, [ 'foo', 'bar' ] 'browserify-swap', function (err) {
   if (err) return console.error(err);
-  // package.json's found in root and below now have 'browserify-swap' added 
-  // to the end of their 'browserify.transform' field
+  // package.json's of packages 'foo' and 'bar' found in root and below 
+  // now have 'browserify-swap' added to the end of their 'browserify.transform' field
 })
 ```
 
@@ -57,14 +57,14 @@ EXAMPLES:
 </div>
 <dl>
 <dt>
-<h4 class="name" id="viralify"><span class="type-signature"></span>viralify<span class="signature">(root, transform, <span class="optional">front</span>, cb)</span><span class="type-signature"></span></h4>
+<h4 class="name" id="viralify"><span class="type-signature"></span>viralify<span class="signature">(root, packages, transform, <span class="optional">front</span>, cb)</span><span class="type-signature"></span></h4>
 </dt>
 <dd>
 <div class="description">
 <p>Injects the given transform(s) into the <code>browserify.transform</code> field of all <code>package.json</code>s
-at and below the given <code>root</code>.</p>
+of the packages below the given <code>root</code> that where specified.</p>
 <p>If the transform(s) were contained in the <code>package.json</code> already, no changes are made and no writes performed.
-This means that all viralify runs succeeding the first one will be much faster than the first.</p>
+This means that all viralify runs succeeding the first one will be much faster.</p>
 </div>
 <h5>Parameters:</h5>
 <table class="params">
@@ -85,6 +85,15 @@ This means that all viralify runs succeeding the first one will be much faster t
 <td class="attributes">
 </td>
 <td class="description last"><p>of the package</p></td>
+</tr>
+<tr>
+<td class="name"><code>packages</code></td>
+<td class="type">
+<span class="param-type">Array.&lt;String></span>
+</td>
+<td class="attributes">
+</td>
+<td class="description last"><p>one or more packages to which the transforms should be added</p></td>
 </tr>
 <tr>
 <td class="name"><code>transform</code></td>
@@ -122,7 +131,7 @@ This means that all viralify runs succeeding the first one will be much faster t
 <li>
 <a href="https://github.com/thlorenz/viralify/blob/master/index.js">index.js</a>
 <span>, </span>
-<a href="https://github.com/thlorenz/viralify/blob/master/index.js#L50">lineno 50</a>
+<a href="https://github.com/thlorenz/viralify/blob/master/index.js#L61">lineno 61</a>
 </li>
 </ul></dd>
 </dl>
@@ -136,7 +145,7 @@ This means that all viralify runs succeeding the first one will be much faster t
 </div>
 <!-- END docme generated API please keep comment here to allow auto update -->
 
-#### viralify.sync(root, transform, front)
+#### viralify.sync(root, packages, transform, front)
 
 Same as `viralify` but performed synchronously.
 
