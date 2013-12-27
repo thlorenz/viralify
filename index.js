@@ -52,12 +52,15 @@ function packsWithTransforms(root, transform, front, relPaths) {
     .filter(function (p) { return p.changed });
 }
 
+function globify(packnames) {
+  return '{' + packnames.join(',') + '}';
+}
 
 var go = module.exports = 
 
 /**
  * Injects the given transform(s) into the `browserify.transform` field of all `package.json`s
- * at and below the given `root`.
+ * of the packages below the given `root` that where specified.
  *
  * If the transform(s) were contained in the `package.json` already, no changes are made and no writes performed.
  * This means that all viralify runs succeeding the first one will be much faster.
@@ -65,11 +68,13 @@ var go = module.exports =
  * @name viralify
  * @function
  * @param {String} root of the package
+ * @param {Array.<String>} packages one or more packages to which the transforms should be added
  * @param {Array.<String>} transform one or more transforms to be added to the transform field
  * @param {Boolean=} front if set transforms are added to the front of the transform field so they run first
  * @param {Function(Error)} cb called when the transform injection is complete
  */
-function viralify(root, transform, front, cb) {
+function viralify(root, packages, transform, front, cb) {
+  if (!Array.isArray(packages)) packages = [ packages ];
   if (!Array.isArray(transform)) transform = [ transform ];
 
   if (typeof front === 'function') {
@@ -77,7 +82,9 @@ function viralify(root, transform, front, cb) {
     front = false;
   }
 
-  glob('**/package.json', { cwd: root }, function (err, relPaths) {
+  var globString = '**/node_modules/' + globify(packages) + '/package.json';
+
+  glob(globString, { cwd: root }, function (err, relPaths) {
     if (err) return cb(err);
 
     // nothing to do
@@ -108,13 +115,18 @@ module.exports.sync =
  * @name viralivy.sync
  * @function
  * @param {String} root of the package
+ * @param {Array.<String>} packages one or more packages to which the transforms should be added
  * @param {Array.<String>} transform one or more transforms to be added to the transform field
  * @param {Boolean=} front if set transforms are added to the front of the transform field so they run first
+ * @param {Function(Error)} cb called when the transform injection is complete
  */
-function sync(root, transform, front) {
+function sync(root, packages, transform, front) {
+  if (!Array.isArray(packages)) packages = [ packages ];
   if (!Array.isArray(transform)) transform = [ transform ];
 
-  var relPaths = glob.sync('**/package.json', { cwd: root })
+  var globString = '**/node_modules/' + globify(packages) + '/package.json';
+
+  var relPaths = glob.sync(globString, { cwd: root })
   var packs = packsWithTransforms(root, transform, front, relPaths);
   packs.forEach(function (p) {
     fs.writeFileSync(p.file, JSON.stringify(p.pack, null, 2), 'utf8');

@@ -13,13 +13,16 @@ function inspect(obj, depth) {
   console.error(require('util').inspect(obj, false, depth || 5, true));
 }
 
-test('\nviralifying three transforms synchronously in different situations', function (t) {
+test('\nviralifying three transforms applying to all packages synchronously in different situations', function (t) {
 
   reset(original, copy, runTest);
+  //
+  // original is not viralified since it is the root, however included as package to verify this behavior
+  var packages = [ 'original', 'dep', 'sub-dep1', 'sub-sub-dep1', 'sub-dep2' ];
 
   function runTest(err) {
     if (err) { t.fail(err); t.end(); }
-    viralify.sync(copy, [ 'einsify',  'zweiify', 'dreiify' ])
+    viralify.sync(copy, packages, [ 'einsify',  'zweiify', 'dreiify' ])
 
     getPacks(copy, function (err, packs) {
       if (err) { t.fail(err); t.end(); }
@@ -53,12 +56,7 @@ test('\nviralifying three transforms synchronously in different situations', fun
                     'dreiify' ] } },
             { name: 'original',
               description: 'root project',
-              main: 'index.js',
-              browserify:
-              { transform:
-                  [ 'einsify',
-                    'zweiify',
-                    'dreiify' ] } },
+              main: 'index.js' },
             { name: 'dep',
               description: 'dep which itself has two transforms already',
               main: 'index.js',
@@ -76,7 +74,7 @@ test('\nviralifying three transforms synchronously in different situations', fun
     })
 
     function addToFront() {
-      viralify.sync(copy, [ 'einsify',  'zweiify', 'dreiify' ], true)
+      viralify.sync(copy, packages, [ 'einsify',  'zweiify', 'dreiify' ], true)
 
       getPacks(copy, function (err, packs) {
         if (err) { t.fail(err); t.end(); }
@@ -110,12 +108,7 @@ test('\nviralifying three transforms synchronously in different situations', fun
                     'dreiify' ] } },
             { name: 'original',
               description: 'root project',
-              main: 'index.js',
-              browserify:
-              { transform:
-                  [ 'einsify',
-                    'zweiify',
-                    'dreiify'] } },
+              main: 'index.js' },
             { name: 'dep',
               description: 'dep which itself has two transforms already',
               main: 'index.js',
