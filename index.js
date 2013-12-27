@@ -53,7 +53,8 @@ function packsWithTransforms(root, transform, front, relPaths) {
 }
 
 function globify(packnames) {
-  return '{' + packnames.join(',') + '}';
+  var extra = packnames.length === 1 ? ',' : '';
+  return '{' + packnames.join(',') + extra + '}';
 }
 
 var go = module.exports = 
@@ -128,6 +129,7 @@ function sync(root, packages, transform, front) {
 
   var relPaths = glob.sync(globString, { cwd: root })
   var packs = packsWithTransforms(root, transform, front, relPaths);
+
   packs.forEach(function (p) {
     fs.writeFileSync(p.file, JSON.stringify(p.pack, null, 2), 'utf8');
   })
