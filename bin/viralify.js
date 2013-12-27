@@ -14,7 +14,7 @@ function usage() {
 var argv    =  require('minimist')(
     process.argv.slice(2)
   , { 'boolean': [ 'f', 'front', 'h', 'help' ] }
-  , { 'string': [ 'transform', 't' ] }
+  , { 'string': [ 'transform', 't', 'package', 'p' ] }
 );
 
 (function () {
@@ -30,16 +30,26 @@ if (!root) {
 }
 
 var transform = [].concat(argv.t).concat(argv.transform).filter(Boolean);
+var packages = [].concat(argv.p).concat(argv.package).filter(Boolean);
 
 if (!transform.length) {
   console.error('\nviralify %s Need to specify at least one transform\n', colors.red('ERR'));
   return usage();
 }
 
-console.log('viralify %s Processing %s', colors.green('INFO'), root);
-viralify(root, transform, front, function (err) {
+if (!packages.length) {
+  console.error('\nviralify %s Need to specify at least one package\n', colors.red('ERR'));
+  return usage();
+}
+
+var vs = colors.magenta('viralify');
+console.log('%s %s Processing %s', colors.green('info'), vs, root);
+console.log('%s %s Transforms: %s', colors.green('info'), vs, transform.join(', '));
+console.log('%s %s Packages:   %s', colors.green('info'), vs, packages.join(', '));
+
+viralify(root, packages, transform, front, function (err) {
   if (err) return console.error(err);
-  console.log('viralify %s Everything is OK', colors.green('INFO'));
+  console.log('%s %s Everything is OK', colors.green('info'), vs);
 })
 
 })()

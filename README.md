@@ -3,7 +3,7 @@
 Injects one or more browserify transforms into all dependencies of a package recursively.
 
 ```sh
-viralify . -t browserify-swap
+viralify . -t browserify-swap -p ansicolors
 ```
 
 ```js
@@ -29,18 +29,20 @@ viralify <path> <options>
 
 OPTIONS:
 
-  -t, --transform   transform(s) to inject
+  -t, --transform   transform(s) to inject (required)
+  -p, --packages    packages into which to inject the transforms (required)
   -f, --front       if set, the transform(s) are injected in the front of the transform field so they run first
 
 EXAMPLES:
 
-  Inject 'browserify-swap' transform for package in current directory and all its dependencies
+  Inject 'browserify-swap' transform for all foo dependencies of the package in the current directory
 
-    viralify . -t browserify-swap
+    viralify . -t browserify-swap -p foo
 
-  Inject 'envify' and 'es6ify' transforms in front for all dependencies found in ./node_modules
+  Inject 'envify' and 'es6ify' transforms in front for all foo and bar dependencies of the package
+  in the current directory
 
-    viralify ./node_modules --transform envify --transform es6ify --front
+    viralify ./node_modules --transform envify --transform es6ify --front --package foo -p bar
 ```
 ## API
 
