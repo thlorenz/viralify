@@ -30,6 +30,7 @@
   },
   "keywords": [
     "browserify",
+    "browserify-transform",
     "recursive",
     "global",
     "transform",
