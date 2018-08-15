@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/thlorenz/viralify",
   "dependencies": {
-    "glob": "~3.2.7",
+    "glob": "^7.1.2",
     "runnel": "~0.5.1",
     "minimist": "0.0.5",
     "ansicolors": "~0.3.2"
